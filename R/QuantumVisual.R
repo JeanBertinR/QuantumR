@@ -37,7 +37,7 @@
 library(shiny)
 library(qsimulatR)
 
-QuantumVisual <- function() {
+#QuantumVisual <- function() {
   # User interface
   ui <- fluidPage(
 
@@ -96,9 +96,11 @@ QuantumVisual <- function() {
     )
   }
 
-  # Running the Shiny application
-  shinyApp(ui = ui, server = server)
-}
+  # Assembly UI and SERVER sides inside shinyApp
+  app <- shiny::shinyApp(ui,server)
+
+  runApp(app,host = "0.0.0.0",quiet = TRUE,launch.browser = TRUE)
+#}
 
 # Running the QuantumVisual app
 QuantumVisual()
