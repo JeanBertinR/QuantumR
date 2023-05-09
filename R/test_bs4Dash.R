@@ -6,7 +6,8 @@ library(shiny)
 library(bs4Dash)
 library(thematic)
 library(waiter)
-library(shinydashboard)
+library(plotly)
+library(qsimulatR)
 thematic_shiny()
 
 # toast options
@@ -76,34 +77,9 @@ value_boxes_tab <- tabItem(
       icon = icon("database")
     )
   ),
-  h4("Info Boxes"),
-  fluidRow(
-    infoBox(
-      tabName = "cardsAPI",
-      title = "Navigate to Cards API section",
-      value = 1410,
-      color = "indigo",
-      icon = icon("laptop-code")
-    ),
-    infoBox(
-      tabName = "colors",
-      title = "Navigate to colors section",
-      color = "info",
-      value = 240,
-      icon = icon("droplet"),
-      elevation = 4
-    ),
-    infoBox(
-      title = "Comments",
-      subtitle = "A subtitle",
-      color = "indigo",
-      gradient = TRUE,
-      fill = TRUE,
-      value = 41410,
-      icon = icon("comments"),
-      href = "https://www.google.com"
-    )
-  )
+
+  plotlyOutput("chart_quantum_simulation")
+
 )
 
 
@@ -122,7 +98,7 @@ shinyApp(
         title = "QuantumR",
         color = "primary",
         href = "https://divadnojnarg.github.io/outstanding-shiny-ui/",
-        image = "https://www.dhl.com/content/dam/dhl/global/core/images/smart-grid-thought-leadership-1375x504/csi-ltr6-quantum-computing-trend.jpg",
+        image = "https://www.science.org/do/10.1126/science.adh2923/full/_0224_quantumcomputing.jpg",
         opacity = 0.8
       ),
       fixed = TRUE,
@@ -260,6 +236,16 @@ shinyApp(
   server = function(input, output, session) {
     useAutoColor()
 
+    # chart Quantum simulation
+    output$chart_quantum_simulation <- renderPlotly({
+
+      nbits = 3
+      x <- qstate(nbits=nbits)
+      #plot(x, qubitnames=paste0("qbit",1:nbits))
+      y <- H(1) * x
+      ggplotly(plot(y))
+    })
+
     # app button --------------------------------------------------------------
     output$btnVal <- renderText(input$myAppButton)
     observeEvent(input$myAppButton, {
@@ -303,22 +289,6 @@ shinyApp(
         )
       )
     })
-
-    # tooltips, popovers ------------------------------------------------------
-
-    # observe({
-    #  addTooltip(
-    #    id = "controlbarToggle",
-    #    options = list(
-    #      title = "This toggles the right sidebar",
-    #      placement = "bottom"
-    #    )
-    #  )
-    # })
-
-    # plots -------------------------------------------------------------------
-
-
 
     output$bigPlot <- renderPlot({
       hist(rnorm(input$bigObs))
